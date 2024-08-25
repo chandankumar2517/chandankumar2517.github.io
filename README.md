@@ -1,2 +1,2 @@
-# nehaa28.github.io
-My Data science portfolio, check it out on https://nehaa28.github.io/
+# chandankumar2517.github.io
+My Professional portfolio, check it out on https://chandankumar2517.github.io/
