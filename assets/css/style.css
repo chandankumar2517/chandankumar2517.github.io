@@ -343,7 +343,7 @@ textarea.form-control {
 /* ---------------------------------------------- */
 
 #home {
-	background: url(../images/bacground.jpg);
+	background: url(../images/representation-user-experience-interface-design.jpg);
 	background-color: #222;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
@@ -971,3 +971,13 @@ figure.effect-bubba:hover p {
 
 }
 
+
+.logo {
+
+	padding: 13px ;
+}
+
+.footer-link {
+
+	color:white;
+}
