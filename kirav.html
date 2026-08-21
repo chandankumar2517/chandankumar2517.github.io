@@ -824,3 +824,191 @@ body {
   }
 })();
 </script>
+
+<!-- ════ MUSIC BUTTON ════ -->
+<button id="music-btn" aria-label="Play music" title="Play music">🎵</button>
+<div id="music-notes-container"></div>
+
+<style>
+#music-btn {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  font-size: 1.6rem;
+  cursor: pointer;
+  z-index: 998;
+  box-shadow: 0 6px 24px rgba(171,71,188,0.45), 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex; align-items: center; justify-content: center;
+  animation: btnPulse 2s ease-in-out infinite;
+}
+#music-btn:hover { transform: scale(1.12); }
+#music-btn.playing {
+  background: linear-gradient(135deg, var(--orange), var(--red));
+  animation: btnSpin 3s linear infinite;
+}
+@keyframes btnPulse {
+  0%,100% { box-shadow: 0 6px 24px rgba(171,71,188,0.45), 0 0 0 0 rgba(171,71,188,0.4); }
+  50%      { box-shadow: 0 6px 24px rgba(171,71,188,0.45), 0 0 0 12px rgba(171,71,188,0); }
+}
+@keyframes btnSpin {
+  from { box-shadow: 0 6px 24px rgba(239,83,80,0.5), 0 0 0 0 rgba(255,167,38,0.4); }
+  50%  { box-shadow: 0 6px 24px rgba(239,83,80,0.5), 0 0 0 14px rgba(255,167,38,0); }
+  to   { box-shadow: 0 6px 24px rgba(239,83,80,0.5), 0 0 0 0 rgba(255,167,38,0.4); }
+}
+
+/* Floating musical notes */
+.music-note {
+  position: fixed;
+  font-size: 1.4rem;
+  pointer-events: none;
+  z-index: 997;
+  animation: noteFloat 2.2s ease-out forwards;
+}
+@keyframes noteFloat {
+  0%   { opacity: 1;   transform: translateY(0)   rotate(0deg)   scale(1); }
+  60%  { opacity: 0.8; transform: translateY(-80px) rotate(20deg) scale(1.2); }
+  100% { opacity: 0;   transform: translateY(-160px) rotate(-15deg) scale(0.7); }
+}
+</style>
+
+<script>
+(function () {
+  const btn = document.getElementById('music-btn');
+  const noteContainer = document.getElementById('music-notes-container');
+  let audioCtx = null, playing = false, scheduler = null, noteInterval = null;
+
+  /* ── Sweet music-box melody in C major ──
+     Custom composition: gentle ascending phrases,
+     like a soft chime / xylophone. Pentatonic-influenced
+     so every note sounds pleasant together.              */
+  const C4=261.63,D4=293.66,E4=329.63,F4=349.23,G4=392.00,A4=440.00,B4=493.88;
+  const C5=523.25,D5=587.33,E5=659.25,F5=698.46,G5=783.99,A5=880.00,B5=987.77,C6=1046.50;
+
+  const melody = [
+    // Phrase 1 — joyful rise ✨
+    [C5,0.28],[E5,0.28],[G5,0.28],[C6,0.55],
+    [B5,0.28],[G5,0.28],[E5,0.65],
+    // Phrase 2 — tender middle 🌸
+    [A5,0.28],[G5,0.28],[E5,0.28],[G5,0.55],
+    [F5,0.28],[E5,0.28],[D5,0.65],
+    // Phrase 3 — gentle dip, peaceful 🕊️
+    [E5,0.28],[D5,0.28],[C5,0.28],[E5,0.55],
+    [D5,0.28],[C5,0.28],[G4,0.65],
+    // Phrase 4 — climbing again 🌈
+    [C5,0.22],[D5,0.22],[E5,0.22],[G5,0.28],[A5,0.28],
+    [G5,0.55],[E5,0.18],[C5,0.72],
+    // Phrase 5 — sparkling finish 🌟
+    [G5,0.28],[E5,0.28],[G5,0.28],[A5,0.28],
+    [C6,0.75],[G5,0.28],[E5,0.28],[C5,0.95],
+  ];
+
+  /* Build a warm reverb from a programmatic impulse response */
+  function makeReverb(ctx) {
+    const len = ctx.sampleRate * 1.8;
+    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) {
+      const d = buf.getChannelData(c);
+      for (let i = 0; i < len; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
+      }
+    }
+    const conv = ctx.createConvolver();
+    conv.buffer = buf;
+    return conv;
+  }
+
+  function playMelody() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Shared reverb + wet/dry mix
+    const reverb  = makeReverb(audioCtx);
+    const dryGain = audioCtx.createGain(); dryGain.gain.value = 0.6;
+    const wetGain = audioCtx.createGain(); wetGain.gain.value = 0.38;
+    reverb.connect(wetGain); wetGain.connect(audioCtx.destination);
+    dryGain.connect(audioCtx.destination);
+
+    let t = audioCtx.currentTime + 0.06;
+
+    function scheduleLoop() {
+      melody.forEach(([freq, dur]) => {
+        /* ── Music-box "pluck": sine + shimmer overtone ── */
+        const pluck = audioCtx.createOscillator();
+        const pGain = audioCtx.createGain();
+        pluck.type = 'sine';
+        pluck.frequency.setValueAtTime(freq, t);
+        // Quick attack, exponential decay — true pluck shape
+        pGain.gain.setValueAtTime(0.001, t);
+        pGain.gain.linearRampToValueAtTime(0.32, t + 0.012);
+        pGain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.92);
+        pluck.connect(pGain);
+        pGain.connect(dryGain); pGain.connect(reverb);
+        pluck.start(t); pluck.stop(t + dur);
+
+        /* ── Shimmer: overtone at 2× freq, very soft ── */
+        const shimmer = audioCtx.createOscillator();
+        const sGain   = audioCtx.createGain();
+        shimmer.type = 'sine';
+        shimmer.frequency.setValueAtTime(freq * 2, t);
+        sGain.gain.setValueAtTime(0.001, t);
+        sGain.gain.linearRampToValueAtTime(0.07, t + 0.01);
+        sGain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.5);
+        shimmer.connect(sGain); sGain.connect(reverb);
+        shimmer.start(t); shimmer.stop(t + dur);
+
+        /* ── Soft bass pad: one octave below, sine ── */
+        const pad  = audioCtx.createOscillator();
+        const pads = audioCtx.createGain();
+        pad.type = 'sine';
+        pad.frequency.setValueAtTime(freq / 2, t);
+        pads.gain.setValueAtTime(0.001, t);
+        pads.gain.linearRampToValueAtTime(0.09, t + 0.05);
+        pads.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        pad.connect(pads); pads.connect(dryGain); pads.connect(reverb);
+        pad.start(t); pad.stop(t + dur);
+
+        t += dur;
+      });
+      scheduler = setTimeout(scheduleLoop, (t - audioCtx.currentTime - 0.1) * 1000);
+    }
+    scheduleLoop();
+  }
+
+  function stopMelody() {
+    clearTimeout(scheduler);
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+  }
+
+  /* Floating note emitter */
+  const NOTES_EMOJI = ['🎵','🎶','🎼','♪','♫'];
+  function spawnNote() {
+    const n = document.createElement('div');
+    n.className = 'music-note';
+    n.textContent = NOTES_EMOJI[Math.floor(Math.random() * NOTES_EMOJI.length)];
+    const rect = btn.getBoundingClientRect();
+    n.style.left = (rect.left + Math.random() * rect.width - 10) + 'px';
+    n.style.top  = (rect.top  - 10) + 'px';
+    noteContainer.appendChild(n);
+    setTimeout(() => n.remove(), 2300);
+  }
+
+  btn.addEventListener('click', () => {
+    playing = !playing;
+    if (playing) {
+      btn.textContent = '⏸️';
+      btn.classList.add('playing');
+      playMelody();
+      noteInterval = setInterval(spawnNote, 500);
+      spawnNote();
+    } else {
+      btn.textContent = '🎵';
+      btn.classList.remove('playing');
+      stopMelody();
+      clearInterval(noteInterval);
+    }
+  });
+})();
+</script>
