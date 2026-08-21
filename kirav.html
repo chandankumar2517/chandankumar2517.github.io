@@ -1,0 +1,405 @@
+<title>Kirav's Big Road Trip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap">
+
+<style>
+  /* ── Token system ── */
+  :root {
+    --sky:        #0B1540;
+    --sky-mid:    #162060;
+    --saffron:    #FFC32B;
+    --saffron-dim:#D4961A;
+    --coral:      #E84040;
+    --parchment:  #FFF8ED;
+    --card-bg:    #FFFDF7;
+    --ink:        #1A1240;
+    --ink-soft:   #3D3260;
+    --road:       #2A3260;
+    --road-line:  #FFC32B;
+    --star:       #FFE88A;
+    --shadow:     rgba(11,21,64,0.13);
+    --bg:         var(--parchment);
+    --text:       var(--ink);
+    --text-soft:  var(--ink-soft);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:        var(--sky);
+      --card-bg:   #111D4A;
+      --text:      #F0EAD6;
+      --text-soft: #A8B4D8;
+      --shadow:    rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:        var(--sky);
+    --card-bg:   #111D4A;
+    --text:      #F0EAD6;
+    --text-soft: #A8B4D8;
+    --shadow:    rgba(0,0,0,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero sky ── */
+  .hero {
+    background: linear-gradient(180deg, #04091F 0%, #0B1540 55%, #162060 100%);
+    padding: 3rem 1.5rem 6rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Stars */
+  .stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    background: var(--star);
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate ease-in-out;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.3; transform: scale(1); }
+    to   { opacity: 1;   transform: scale(1.3); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .star { animation: none; opacity: 0.7; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: clamp(2.4rem, 8vw, 4.5rem);
+    font-weight: 800;
+    color: #FFFFFF;
+    text-wrap: balance;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-title span {
+    color: var(--saffron);
+  }
+
+  .hero-subtitle {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #A8B8E0;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  /* Big car SVG */
+  .hero-car {
+    margin: 0 auto 1rem;
+    width: min(320px, 80vw);
+    display: block;
+    filter: drop-shadow(0 8px 32px rgba(255,195,43,0.35));
+    animation: carFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes carFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-car { animation: none; }
+  }
+
+  /* Road divider */
+  .road-divider {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    margin-top: -1px;
+  }
+
+  /* ── Story area ── */
+  .story-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .chapter {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 4px 24px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: var(--saffron);
+    border-radius: 20px 0 0 20px;
+  }
+
+  .chapter.coral::before { background: var(--coral); }
+  .chapter.blue::before  { background: #4A7CFF; }
+  .chapter.green::before { background: #2ECC71; }
+
+  .chapter-label {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 0.35rem;
+  }
+  .chapter.coral .chapter-label { color: var(--coral); }
+  .chapter.blue  .chapter-label { color: #4A7CFF; }
+  .chapter.green .chapter-label { color: #2ECC71; }
+
+  .chapter-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--text);
+    text-wrap: balance;
+    margin-bottom: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .chapter-icon {
+    font-size: 2rem;
+    float: right;
+    margin: -0.25rem 0 0.5rem 1rem;
+    line-height: 1;
+  }
+
+  .chapter p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  .chapter p + p { margin-top: 0.85rem; }
+
+  .chapter p strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* Dedication card */
+  .dedication {
+    background: linear-gradient(135deg, #0B1540, #162060);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 32px rgba(255,195,43,0.2);
+  }
+
+  .dedication p {
+    color: #A8B8E0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 600;
+  }
+
+  .dedication strong {
+    color: var(--saffron);
+    display: block;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0.5rem 0 0.25rem;
+  }
+
+  /* Road footer illustration */
+  .road-footer {
+    background: var(--road);
+    padding: 1.25rem 0 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .road-stripes {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 4px;
+    transform: translateY(-50%);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--road-line) 0px, var(--road-line) 40px,
+      transparent 40px, transparent 80px
+    );
+    opacity: 0.6;
+  }
+
+  .end-note {
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1rem;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+</style>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="stars" id="stars"></div>
+
+  <!-- Big friendly car SVG -->
+  <svg class="hero-car" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Car body -->
+    <rect x="20" y="75" width="280" height="65" rx="18" fill="#E84040"/>
+    <!-- Cabin -->
+    <path d="M70 75 Q85 38 120 35 L210 35 Q245 38 255 75 Z" fill="#C22828"/>
+    <!-- Windows -->
+    <path d="M90 73 Q100 48 125 46 L155 46 L155 73 Z" fill="#7EC8E3" opacity="0.9"/>
+    <path d="M165 46 L195 46 Q218 48 228 73 L165 73 Z" fill="#7EC8E3" opacity="0.9"/>
+    <!-- Window frames -->
+    <path d="M90 73 Q100 48 125 46 L155 46 L155 73 Z" fill="none" stroke="#C22828" stroke-width="2"/>
+    <path d="M165 46 L195 46 Q218 48 228 73 L165 73 Z" fill="none" stroke="#C22828" stroke-width="2"/>
+    <!-- Divider pillar -->
+    <rect x="158" y="46" width="5" height="27" fill="#C22828"/>
+    <!-- Headlights -->
+    <ellipse cx="302" cy="95" rx="10" ry="8" fill="#FFC32B"/>
+    <ellipse cx="302" cy="95" rx="6" ry="5" fill="#FFE88A"/>
+    <!-- Tail lights -->
+    <ellipse cx="22" cy="95" rx="8" ry="6" fill="#FF6060"/>
+    <!-- Wheels -->
+    <circle cx="80" cy="140" r="24" fill="#1A1A2E"/>
+    <circle cx="80" cy="140" r="14" fill="#3D3D6B"/>
+    <circle cx="80" cy="140" r="6" fill="#FFC32B"/>
+    <circle cx="240" cy="140" r="24" fill="#1A1A2E"/>
+    <circle cx="240" cy="140" r="14" fill="#3D3D6B"/>
+    <circle cx="240" cy="140" r="6" fill="#FFC32B"/>
+    <!-- Spoiler detail -->
+    <rect x="22" y="70" width="6" height="20" rx="3" fill="#B01818"/>
+    <!-- Door line -->
+    <line x1="160" y1="78" x2="160" y2="138" stroke="#B01818" stroke-width="2" stroke-dasharray="4,3"/>
+    <!-- Bumper -->
+    <rect x="290" y="115" width="18" height="10" rx="5" fill="#C22828"/>
+  </svg>
+
+  <div class="hero-eyebrow">A Story Just For</div>
+  <h1 class="hero-title">🏎️ <span>Kirav</span>'s Big<br>Road Trip!</h1>
+  <p class="hero-subtitle">From Bangalore to the Whole Wide World</p>
+</section>
+
+<!-- Road wave top -->
+<div class="road-divider">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+    <path d="M0,30 Q360,0 720,30 Q1080,60 1440,30 L1440,60 L0,60 Z" fill="#2A3260"/>
+  </svg>
+</div>
+<div style="background:#2A3260;padding:0.6rem 0;display:flex;justify-content:center;">
+  <div style="background:repeating-linear-gradient(90deg,#FFC32B 0,#FFC32B 40px,transparent 40px,transparent 80px);height:4px;width:90%;opacity:0.6;border-radius:2px;"></div>
+</div>
+<div class="road-divider" style="transform:scaleY(-1);margin-top:-1px;">
+  <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:40px;">
+    <path d="M0,30 Q360,0 720,30 Q1080,60 1440,30 L1440,60 L0,60 Z" fill="#2A3260"/>
+  </svg>
+</div>
+
+<!-- Story -->
+<main class="story-wrapper">
+
+  <article class="chapter">
+    <div class="chapter-icon">🌅</div>
+    <div class="chapter-label">Chapter 1 — Bangalore</div>
+    <h2 class="chapter-title">The Morning the Magic Car Appeared</h2>
+    <p>One sunny morning in <strong>Bangalore</strong>, Kirav woke up early — as he always did. He brushed his teeth, folded his blanket neatly, and walked outside to find the most incredible thing sitting in the driveway.</p>
+    <p>A <strong>shiny red racing car</strong>, with golden wheels that sparkled like sunshine. On the dashboard, a little note read: <em>"For the bravest, most responsible driver in all of Bangalore. — The Road Magic."</em></p>
+    <p>Kirav didn't throw the note on the ground. He folded it carefully and placed it in his pocket. Then he climbed in, buckled up, and smiled. Today was going to be the greatest adventure of his life.</p>
+  </article>
+
+  <article class="chapter coral">
+    <div class="chapter-icon">🏙️</div>
+    <div class="chapter-label">Chapter 2 — Delhi</div>
+    <h2 class="chapter-title">Nana's City of Colours</h2>
+    <p>Kirav pressed the big golden button on the dashboard and <em>whoooosh</em> — the car zoomed north, past green fields and big rivers, all the way to <strong>Delhi</strong> where his <strong>Nana</strong> lived!</p>
+    <p>Delhi was huge and loud and smelled of hot parathas. Nana squeezed him tight and said, <em>"My Kirav! You came all by yourself?"</em> Kirav grinned. <em>"I drove carefully, Nana. I stopped at every red light."</em></p>
+    <p>In the busy Delhi market, Kirav spotted a chocolate wrapper on the road. Without even thinking, he picked it up and dropped it in the nearest dustbin. <strong>A shopkeeper saw him and clapped.</strong> "What a fine young man!" he said.</p>
+  </article>
+
+  <article class="chapter blue">
+    <div class="chapter-icon">🌊</div>
+    <div class="chapter-label">Chapter 3 — Odisha</div>
+    <h2 class="chapter-title">Thakurda's Land by the Sea</h2>
+    <p>Next, Kirav pointed his magic car east and drove all the way to <strong>Odisha</strong>, where his <strong>Thakurda</strong> (dad's father) lived near rolling hills and a sparkling river.</p>
+    <p>Thakurda was sitting under a mango tree when the red car pulled up. He laughed a big belly laugh and said, <em>"Ha! My grandson, the driver!"</em> He showed Kirav the famous <strong>Jagannath Temple</strong> and told him stories about chariots as big as houses — even bigger than Kirav's 20 toy cars put together!</p>
+    <p>That night, Kirav helped Thakurda set the dinner table and cleared the plates after eating. <em>"You are the most helpful child,"</em> Thakurda said softly, ruffling his hair.</p>
+  </article>
+
+  <article class="chapter green">
+    <div class="chapter-icon">🏁</div>
+    <div class="chapter-label">Chapter 4 — Home</div>
+    <h2 class="chapter-title">The Greatest Racer of All</h2>
+    <p>As the stars began to fill the sky, Kirav drove his magic car back home to <strong>Bangalore</strong>. Mummy and Dadda were waiting at the door, arms wide open.</p>
+    <p><em>"How was your adventure?"</em> asked Dadda. Kirav thought for a moment. <em>"I saw Nana's Delhi and Thakurda's Odisha. I drove through rivers and mountains. And I put every single piece of rubbish in the bin!"</em></p>
+    <p>Mummy laughed and hugged him. <em>"That, my love, is exactly what the greatest racers in the world do."</em></p>
+    <p><strong>And so Kirav parked his magic red car, washed his hands, and went inside — the best driver, and the kindest boy, on any road in the whole wide world. 🏁</strong></p>
+  </article>
+
+  <div class="dedication">
+    <p>This story was written especially for</p>
+    <strong>Kirav ⭐</strong>
+    <p>Who loves cars, always follows the rules,<br>and never forgets the dustbin.<br><br>
+    From your friend — with lots of love. 🚗💛</p>
+  </div>
+
+</main>
+
+<div class="end-note">
+  🏎️ &nbsp; Keep racing, Kirav. The road is yours. &nbsp; 🏎️
+</div>
+
+<script>
+  // Generate random stars
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 1;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      animation-delay:${Math.random()*4}s;
+      animation-duration:${2+Math.random()*3}s;
+    `;
+    container.appendChild(s);
+  }
+</script>
