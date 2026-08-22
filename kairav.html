@@ -880,30 +880,38 @@ body {
   const noteContainer = document.getElementById('music-notes-container');
   let audioCtx = null, playing = false, scheduler = null, noteInterval = null;
 
-  /* ── Sweet music-box melody in C major ──
-     Custom composition: gentle ascending phrases,
-     like a soft chime / xylophone. Pentatonic-influenced
-     so every note sounds pleasant together.              */
-  const C4=261.63,D4=293.66,E4=329.63,F4=349.23,G4=392.00,A4=440.00,B4=493.88;
-  const C5=523.25,D5=587.33,E5=659.25,F5=698.46,G5=783.99,A5=880.00,B5=987.77,C6=1046.50;
+  /* ── Happy Birthday to You — G major, two rounds ──
+     Round 1: G major (warm, familiar)
+     Round 2: same melody up 5 semitones (brighter key lift,
+     like a live band raising the energy for the second chorus) */
+  const G4=392.00,A4=440.00,B4=493.88,C5=523.25,
+        D5=587.33,E5=659.25,F5=698.46,G5=783.99;
 
-  const melody = [
-    // Phrase 1 — joyful rise ✨
-    [C5,0.28],[E5,0.28],[G5,0.28],[C6,0.55],
-    [B5,0.28],[G5,0.28],[E5,0.65],
-    // Phrase 2 — tender middle 🌸
-    [A5,0.28],[G5,0.28],[E5,0.28],[G5,0.55],
-    [F5,0.28],[E5,0.28],[D5,0.65],
-    // Phrase 3 — gentle dip, peaceful 🕊️
-    [E5,0.28],[D5,0.28],[C5,0.28],[E5,0.55],
-    [D5,0.28],[C5,0.28],[G4,0.65],
-    // Phrase 4 — climbing again 🌈
-    [C5,0.22],[D5,0.22],[E5,0.22],[G5,0.28],[A5,0.28],
-    [G5,0.55],[E5,0.18],[C5,0.72],
-    // Phrase 5 — sparkling finish 🌟
-    [G5,0.28],[E5,0.28],[G5,0.28],[A5,0.28],
-    [C6,0.75],[G5,0.28],[E5,0.28],[C5,0.95],
+  const up = (f,n) => f * Math.pow(2, n/12); // transpose helper
+
+  const round1 = [
+    // "Happy Birthday to you"
+    [G4,0.22],[G4,0.22],
+    [A4,0.42],[G4,0.42],[C5,0.42],[B4,0.88],
+    [0, 0.16],
+    // "Happy Birthday to you"
+    [G4,0.22],[G4,0.22],
+    [A4,0.42],[G4,0.42],[D5,0.42],[C5,0.88],
+    [0, 0.16],
+    // "Happy Birthday dear Kairav"
+    [G4,0.22],[G4,0.22],
+    [G5,0.42],[E5,0.42],[C5,0.42],[B4,0.42],[A4,0.88],
+    [0, 0.16],
+    // "Happy Birthday to you"
+    [F5,0.22],[F5,0.22],
+    [E5,0.42],[C5,0.42],[D5,0.42],[C5,1.25],
+    [0, 0.55],
   ];
+
+  // Key lift: up 5 semitones for second round — sounds like a celebration encore
+  const round2 = round1.map(([f,d]) => [f > 0 ? up(f,5) : 0, d]);
+
+  const melody = [...round1, ...round2];
 
   /* Build a warm reverb from a programmatic impulse response */
   function makeReverb(ctx) {
