@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Goa wedding planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f7f5;--card:#fff;--ink:#12302b;--mute:#52706a;--line:#d3e2de;--sea:#1b7a6c;--gold:#e3a622;--on-sea:#fff;color-scheme:light;
+box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1f1c;--card:#152b27;--ink:#e6f2ef;--mute:#9bb8b1;--line:#27443e;--sea:#4cc3b0;--gold:#f0bd47;--on-sea:#0e1f1c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1f1c;--card:#152b27;--ink:#e6f2ef;--mute:#9bb8b1;--line:#27443e;--sea:#4cc3b0;--gold:#f0bd47;--on-sea:#0e1f1c;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:760px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:clamp(28px,6vw,40px);line-height:1.1;margin:0 0 6px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:20px;margin:36px 0 12px;font-weight:600}
+p{margin:0 0 10px;max-width:62ch}
+.sub{color:var(--mute)}
+.total{margin:22px 0 8px;padding:22px;border-radius:18px;background:var(--sea);color:var(--on-sea)}
+.total .big{font-size:clamp(34px,9vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.total .note{opacity:.85;font-size:14px;margin-top:6px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:block;font-size:14px;color:var(--mute)}
+input[type=number]{width:100%;margin-top:4px;padding:9px 10px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+input:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:420px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right;white-space:nowrap}
+tfoot td{font-weight:600;border-bottom:0}
+a{color:var(--sea);text-underline-offset:3px}
+.item{padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item b{font-weight:600}
+.price{color:var(--mute);font-size:14px}
+.todo label{display:flex;gap:10px;align-items:flex-start;color:var(--ink);font-size:16px;padding:6px 0}
+.todo input{margin-top:5px;accent-color:var(--sea);width:18px;height:18px}
+.todo input:checked+span{text-decoration:line-through;color:var(--mute)}
+.trav{display:grid;gap:12px}
+input[type=text]{width:100%;margin-top:4px;padding:9px 10px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+textarea{width:100%;min-height:90px;margin-top:4px;padding:9px 10px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;resize:vertical}
+textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<h1>Goa wedding planner</h1>
+<p class="sub">Wedding in the 3rd week of April (tentative). 3 nights of stay for both families, 1 day for the ceremony. South Goa (Palolem, Patnem, Agonda). All amounts in ₹.</p>
+
+<div class="total">
+  <div class="big" id="grand">₹0</div>
+  <div class="note">Estimated total for stay, food, venue, décor, photography, cabs and other costs, plus a buffer for overruns. Costs still at ₹0 are not filled in yet.</div>
+</div>
+
+<h2>Guest numbers and rates</h2>
+<div class="panel">
+<p class="sub">Guest numbers are tentative. Change any value and every total updates.</p>
+<div class="grid">
+  <label>Groom side guests<input type="number" min="0" id="gG" value="50"></label>
+  <label>Bride side guests<input type="number" min="0" id="gB" value="50"></label>
+  <label>People per room<input type="number" min="1" step="0.5" id="ppr" value="3"></label>
+  <label>Nights of stay<input type="number" min="1" id="nights" value="3"></label>
+  <label>Groom side rate per room per night (₹)<input type="number" min="0" id="rG" value="2500"></label>
+  <label>Bride side rate per room per night (₹)<input type="number" min="0" id="rB" value="2500"></label>
+  <label>Food per plate (₹)<input type="number" min="0" id="plate" value="1100"></label>
+  <label>Guests at the wedding<input type="number" min="0" id="gW" value="100"></label>
+  <label>Venue hire (₹)<input type="number" min="0" id="venue" value="70000"></label>
+  <label>Décor (₹)<input type="number" min="0" id="deco" value="0"></label>
+  <label>Photography and video (₹)<input type="number" min="0" id="photo" value="0"></label>
+  <label>Airport pickup and drop trips<input type="number" min="0" id="cabs" value="0"></label>
+  <label>Cost per airport trip (₹)<input type="number" min="0" id="cabRate" value="0"></label>
+  <label>Local cab days (roam around and emergencies)<input type="number" min="0" id="lDays" value="0"></label>
+  <label>Local cab per day (₹)<input type="number" min="0" id="lRate" value="0"></label>
+  <label>Other costs (₹)<input type="number" min="0" id="other" value="0"></label>
+  <label>Buffer for overruns (%)<input type="number" min="0" id="buf" value="10"></label>
+</div>
+</div>
+
+<h2>Cost estimate</h2>
+<div class="panel scroll">
+<table>
+<thead><tr><th>Item</th><th class="n">Quantity</th><th class="n">Amount</th></tr></thead>
+<tbody id="rows"></tbody>
+<tfoot><tr><td>Total</td><td></td><td class="n" id="tot">₹0</td></tr></tfoot>
+</table>
+</div>
+
+<h2>Shortlist with links</h2>
+<div class="panel">
+<div class="item"><b>Jardim a Mar, Agonda</b> (stay)<div class="price">From ₹1,693 per night for a double room</div><a href="https://kayak.co.in/Agonda-Hotels-Jardim-a-Mar.2570141.ksp" target="_blank" rel="noopener">View on Kayak</a></div>
+<div class="item"><b>The Village Agonda Beach Cottages</b> (stay)<div class="price">₹1,439 to ₹6,313 per night depending on the date</div><a href="https://www.adanione.com/india-hotels/the-village-agonda-beach-cottages-dawalkhazen-agonda-goa-4251760" target="_blank" rel="noopener">View listing</a></div>
+<div class="item"><b>Simrose Resort, Agonda</b> (stay)<div class="price">From about ₹4,370 per night</div><a href="https://www.kayak.co.in/Agonda-Hotels-Simrose.2404404.ksp" target="_blank" rel="noopener">View on Kayak</a></div>
+<div class="item"><b>Other Agonda and Palolem stays</b> (Tubki, Castle House, Casa De Royale)<div class="price">About ₹1,900 to ₹2,400 per night</div><a href="https://expedia.co.in/Agonda-Hotels.d6252796.Travel-Guide-Hotels" target="_blank" rel="noopener">View on Expedia</a></div>
+<div class="item"><b>The Village Resort, Palolem</b> (venue)<div class="price">₹1,100 to ₹1,300 per plate, 150 to 400 guests, 50% advance</div><a href="https://www.theweddingcompany.com/wedding-venues/goa/the-village-resort-palolem" target="_blank" rel="noopener">View on The Wedding Company</a></div>
+<div class="item"><b>Cloud 9 Sarovar Premiere, Patnem</b> (venue)<div class="price">₹1,000 to ₹1,200 per plate, hire ₹45,000 half day or ₹70,000 full day</div><a href="https://www.venuelook.com/wedding-resorts-venues-in-goa/locality/palolem" target="_blank" rel="noopener">View on Venuelook</a></div>
+</div>
+<p class="sub" style="margin-top:10px">Prices come from booking sites on various dates. Ask each property for an April quote.</p>
+
+<h2>December site visit</h2>
+<div class="panel">
+<p class="sub">Tick these off while you visit each place together. Your ticks save in your browser.</p>
+<div class="todo" id="visit"></div>
+</div>
+
+<h2>Places visited</h2>
+<p class="sub">Note what each place says. Quotes should include taxes.</p>
+<div class="trav" id="places"></div>
+
+<h2>Travel plan</h2>
+<div class="panel trav">
+<p class="sub">Fill this in when travel is decided. Guests should fly into Dabolim airport (GOI), the closest to Palolem and Agonda. It saves in your browser as you type.</p>
+<label>Groom side: who is travelling, from where, arrival and departure dates and times, flight or train details<textarea id="tG"></textarea></label>
+<label>Bride side: who is travelling, from where, arrival and departure dates and times, flight or train details<textarea id="tB"></textarea></label>
+<label>Cab notes: airport pickup and drop timings, driver contact, local roaming cab<textarea id="tN"></textarea></label>
+</div>
+
+<h2>To do</h2>
+<div class="panel todo" id="todo"></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+const ids=["gG","gB","ppr","nights","rG","rB","plate","gW","venue","deco","photo","cabs","cabRate","lDays","lRate","other","buf"];
+const tasks=["Fix the April dates","Firm up guest numbers for both sides","Ask 3 stays for an April quote","Ask 2 venues for an April quote and availability","Choose the venue and pay the advance","Book the groom side and bride side stays","Plan travel to Goa for both families","Fill in the travel plan section","Book airport pickup and drop cabs","Arrange a local cab for the stay","Get décor and photography quotes","Find a priest or pandit","Find makeup artists and a DJ or band","Plan wedding-day shuttles between the stays and the venue","Decide how and where to register the marriage","Keep a budget buffer of 10 to 15%"];
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function calc(){
+  const v={};ids.forEach(i=>{v[i]=Math.max(0,parseFloat($(i).value)||0)});
+  const ppr=v.ppr||1;
+  const rooms1=Math.ceil(v.gG/ppr),rooms2=Math.ceil(v.gB/ppr);
+  const s1=rooms1*v.rG*v.nights,s2=rooms2*v.rB*v.nights;
+  const food=v.gW*v.plate,cab=v.cabs*v.cabRate,loc=v.lDays*v.lRate,sub=s1+s2+food+v.venue+v.deco+v.photo+cab+loc+v.other,buf=sub*v.buf/100,tot=sub+buf;
+  $("rows").innerHTML=
+   `<tr><td>Groom side stay</td><td class="n">${rooms1} rooms × ${v.nights} nights</td><td class="n">${fmt(s1)}</td></tr>`+
+   `<tr><td>Bride side stay</td><td class="n">${rooms2} rooms × ${v.nights} nights</td><td class="n">${fmt(s2)}</td></tr>`+
+   `<tr><td>Wedding day food</td><td class="n">${v.gW} plates</td><td class="n">${fmt(food)}</td></tr>`+
+   `<tr><td>Venue hire</td><td class="n">1 day</td><td class="n">${fmt(v.venue)}</td></tr>`+
+   `<tr><td>Décor</td><td class="n">Lump sum</td><td class="n">${fmt(v.deco)}</td></tr>`+
+   `<tr><td>Photography and video</td><td class="n">Lump sum</td><td class="n">${fmt(v.photo)}</td></tr>`+
+   `<tr><td>Airport pickup and drop cabs</td><td class="n">${v.cabs} trips</td><td class="n">${fmt(cab)}</td></tr>`+
+   `<tr><td>Local cab for the stay</td><td class="n">${v.lDays} days</td><td class="n">${fmt(loc)}</td></tr>`+
+   `<tr><td>Other costs</td><td class="n">Lump sum</td><td class="n">${fmt(v.other)}</td></tr>`+
+   `<tr><td>Buffer for overruns</td><td class="n">${v.buf}%</td><td class="n">${fmt(buf)}</td></tr>`;
+  $("tot").textContent=fmt(tot);$("grand").textContent=fmt(tot);
+  const o={};ids.forEach(i=>o[i]=$(i).value);save("gw-vals",o);
+}
+const saved=load("gw-vals",{});ids.forEach(i=>{if(saved[i]!==undefined)$(i).value=saved[i];$(i).addEventListener("input",calc)});
+const done=load("gw-done",{});
+$("todo").innerHTML=tasks.map((t,i)=>`<label><input type="checkbox" data-i="${i}" ${done[i]?"checked":""}><span>${t}</span></label>`).join("");
+$("todo").addEventListener("change",e=>{done[e.target.dataset.i]=e.target.checked;save("gw-done",done)});
+const vtasks=["Fix the tentative April dates before the visit","Book appointments with the managers of 3 to 4 places","Check free rooms for the 3rd week of April","See the rooms and check both families can stay close together","Check the drive time between the two stays and the venue","Taste the food and ask if outside catering is allowed","Ask where haldi, mehendi and sangeet can be held","Ask about music and sound timing rules","Ask about rain, heat and power backup, parking and ground-floor rooms","Ask about laundry, ironing and steaming for guests and wedding outfits, and the cost","Ask about airport pickup and drop and a local cab","Get quotes in writing with taxes and GST included","Ask the advance amount, refund policy and extra-bed rates","Take photos and videos of each place"];
+const vdone=load("gw-vdone",{});
+$("visit").innerHTML=vtasks.map((t,i)=>`<label><input type="checkbox" data-i="${i}" ${vdone[i]?"checked":""}><span>${t}</span></label>`).join("");
+$("visit").addEventListener("change",e=>{vdone[e.target.dataset.i]=e.target.checked;save("gw-vdone",vdone)});
+const pl=load("gw-places",[{},{},{},{}]);
+$("places").innerHTML=pl.map((p,i)=>`<div class="panel"><div class="grid"><label>Place<input type="text" data-i="${i}" data-k="n"></label><label>Free in April?<input type="text" data-i="${i}" data-k="a"></label><label>Quote (₹)<input type="text" data-i="${i}" data-k="q"></label></div><label style="margin-top:12px">Notes: rooms, distances, food, rules<textarea data-i="${i}" data-k="t"></textarea></label></div>`).join("");
+document.querySelectorAll("#places [data-k]").forEach(el=>{const p=pl[el.dataset.i];el.value=p[el.dataset.k]||"";el.addEventListener("input",()=>{p[el.dataset.k]=el.value;save("gw-places",pl)})});
+["tG","tB","tN"].forEach(i=>{const t=$(i);t.value=load("gw-"+i,"");t.addEventListener("input",()=>save("gw-"+i,t.value))});
+calc();
+</script>
+</body>
+</html>
